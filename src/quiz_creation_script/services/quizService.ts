@@ -89,7 +89,7 @@ export async function createAssessment(
         const response = await axios.post(`${config.baseUrl}${routes.createContent}`, body, { headers });
         console.log('API Response:', response.data);
         return {
-            identifier: response.data.result.content_id,
+            identifier: response.data.result.identifier,
             versionKey: response.data.result.versionKey
         };
     } catch (error) {
