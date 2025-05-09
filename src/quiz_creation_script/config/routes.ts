@@ -1,5 +1,5 @@
 export const routes = {
-    createContent: '/api/content/v1/create',
+    createContent: '/api/private/content/v3/create',
     updateContent: '/api/content/v1/update',
     createQuestion: '/api/assessment/v1/items/create',
     reviewContent: '/api/content/v1/review',
