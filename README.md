@@ -129,9 +129,14 @@ To run the course enrollment script:
 
 2. Set the required environment variables (see Configuration section)
 
-3. Run the script:
+3. Run the script to create Learner Profile:
 ```bash
-npm run start:course
+npm run start:learnerProfile
+```
+
+4. Run the script to enroll to the course:
+```bash
+npm run start:enroll
 ```
 
 ## Status Reports
