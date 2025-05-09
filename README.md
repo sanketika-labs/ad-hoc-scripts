@@ -35,11 +35,17 @@ AUTH_KEY=api_key
 # The authentication key for API requests
 
 # Authentication Credentials
-USERNAME=content_creator_username
+CREATOR_USERNAME=content_creator_username
 # The username for content creator account
 
-PASSWORD=content_creator_password
+CREATOR_PASSWORD=content_creator_password
 # The password for content creator account
+
+REVIEWER_USERNAME=content_reviewer_username
+# The username for content reviewer account
+
+REVIEWER_PASSWORD=content_reviewer_password
+# The password for content reviewer account
 
 TOKEN=user_access_token
 # access token for user
@@ -75,6 +81,9 @@ COPYRIGHT=FMPS Org
 # Copyright holder for the content
 
 # CSV File Paths
+
+Ensure a data folder is created in the root directory of the project. This folder should contain the necessary CSV files used to create quizzes and questions.
+
 QUIZ_CSV_PATH=./data/assessment.csv
 # Path to the quiz CSV file to create quiz
 
