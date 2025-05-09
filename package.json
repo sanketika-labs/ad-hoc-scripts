@@ -5,6 +5,8 @@
   "scripts": {
     "start:quiz": "ts-node -r dotenv/config src/quiz_creation_script/index.ts",
     "start:course": "ts-node -r dotenv/config src/course_enrollment_script/index.ts",
+    "start:learnerProfile": "ts-node -r dotenv/config src/course_enrollment_script/createLearnerProfile.ts",
+    "start:enroll": "ts-node -r dotenv/config src/course_enrollment_script/enrollLearners.ts",
     "dev:quiz": "ts-node-dev --respawn -r dotenv/config src/quiz_creation_script/index.ts",
     "dev:course": "ts-node-dev --respawn -r dotenv/config src/course_enrollment_script/index.ts",
     "build": "tsc"
