@@ -2,47 +2,83 @@ import axios from "axios";
 import globalConfig from "../globalConfigs";
 import { routes } from "../course_enrollment_script/config/routes";
 
-export async function getAuthToken(): Promise<string> {
+export async function getAuthToken(): Promise<{ creatorToken: string, reviewerToken: string }> {
     const headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': globalConfig.apiAuthKey
     };
 
-    const tokenData = new URLSearchParams({
+    // Get creator token
+    const creatorTokenData = new URLSearchParams({
         'client_id': globalConfig.clientId,
         'client_secret': globalConfig.clientSecret,
         'grant_type': globalConfig.grant_type,
-        'username': globalConfig.username,
-        'password': globalConfig.password,
+        'username': globalConfig.creatorUsername,
+        'password': globalConfig.creatorPassword,
+    });
+
+    // Get reviewer token
+    const reviewerTokenData = new URLSearchParams({
+        'client_id': globalConfig.clientId,
+        'client_secret': globalConfig.clientSecret,
+        'grant_type': globalConfig.grant_type,
+        'username': globalConfig.reviewerUsername,
+        'password': globalConfig.reviewerPassword,
     });
 
     try {
-        // Get initial token
-        const tokenResponse = await axios.post(
+        // Get creator initial token
+        const creatorTokenResponse = await axios.post(
             `${globalConfig.baseUrl}${routes.getRefeshToken}`,
-            tokenData,
+            creatorTokenData,
             { headers }
         );
 
-        const refreshToken = tokenResponse.data.refresh_token;
+        const creatorRefreshToken = creatorTokenResponse.data.refresh_token;
 
-        // Use refresh token to get access token
-        const refreshData = new URLSearchParams({
-            'refresh_token': refreshToken
+        // Use creator refresh token to get access token
+        const creatorRefreshData = new URLSearchParams({
+            'refresh_token': creatorRefreshToken
         });
 
-        const refreshResponse = await axios.post(
+        const creatorRefreshResponse = await axios.post(
            `${globalConfig.baseUrl}${routes.getToken}`,
-            refreshData,
+            creatorRefreshData,
             { headers }
         );
 
-        const accessToken = refreshResponse.data.result.access_token;
+        const creatorAccessToken = creatorRefreshResponse.data.result.access_token;
 
-        // Update the config file with the new token
-        globalConfig.userToken = accessToken;
+        // Get reviewer initial token
+        const reviewerTokenResponse = await axios.post(
+            `${globalConfig.baseUrl}${routes.getRefeshToken}`,
+            reviewerTokenData,
+            { headers }
+        );
 
-        return accessToken;
+        const reviewerRefreshToken = reviewerTokenResponse.data.refresh_token;
+
+        // Use reviewer refresh token to get access token
+        const reviewerRefreshData = new URLSearchParams({
+            'refresh_token': reviewerRefreshToken
+        });
+
+        const reviewerRefreshResponse = await axios.post(
+           `${globalConfig.baseUrl}${routes.getToken}`,
+            reviewerRefreshData,
+            { headers }
+        );
+
+        const reviewerAccessToken = reviewerRefreshResponse.data.result.access_token;
+
+        // Update the config file with the new tokens
+        globalConfig.creatorUserToken = creatorAccessToken;
+        globalConfig.reviewerUserToken = reviewerAccessToken;
+
+        return {
+            creatorToken: creatorAccessToken,
+            reviewerToken: reviewerAccessToken
+        };
     } catch (error) {
         throw error;
     }

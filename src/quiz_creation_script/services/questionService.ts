@@ -158,7 +158,7 @@ export async function createQuestion(
         'X-Channel-Id': assessmentConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
-        'x-authenticated-user-token': globalConfig.userToken
+        'x-authenticated-user-token': globalConfig.creatorUserToken
     };
 
     try {

@@ -19,6 +19,7 @@ interface ContentRequestBody {
             mimeType: string;
             creator: string;
             contentType: string;
+            primaryCategory?: string;
         }
     }
 }
@@ -52,21 +53,28 @@ export async function createAssessment(
     maxAttempts: number,
     contentType: string
 ): Promise<{ identifier: string; versionKey: string }> {
+    
+    const contentBody: ContentRequestBody['request']['content'] = {
+        code,
+        name,
+        maxAttempts,
+        description: "Enter description for Assessment",
+        createdBy: assessmentConfig.createdBy,
+        organisation: assessmentConfig.organisation,
+        createdFor: [assessmentConfig.channelId],
+        framework: assessmentConfig.framework,
+        mimeType: assessmentConfig.mimeType,
+        creator: assessmentConfig.creator,
+        contentType: contentType === 'assess' ? 'SelfAssess' : 'Resource'
+    };
+
+    if (contentType === 'practise') {
+        contentBody.primaryCategory = 'Practise Assess';
+    }
+
     const body: ContentRequestBody = {
         request: {
-            content: {
-                code,
-                name,
-                maxAttempts,
-                description: "Enter description for Assessment",
-                createdBy: assessmentConfig.createdBy,
-                organisation: assessmentConfig.organisation,
-                createdFor: [assessmentConfig.channelId],
-                framework: assessmentConfig.framework,
-                mimeType: assessmentConfig.mimeType,
-                creator: assessmentConfig.creator,
-                contentType
-            }
+            content: contentBody
         }
     };
 
@@ -74,7 +82,7 @@ export async function createAssessment(
         'X-Channel-Id': assessmentConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
-        'x-authenticated-user-token': globalConfig.userToken
+        'x-authenticated-user-token': globalConfig.creatorUserToken
     };
 
     try {
@@ -120,7 +128,7 @@ export async function updateContent(
         'X-Channel-Id': assessmentConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
-        'x-authenticated-user-token': globalConfig.userToken
+        'x-authenticated-user-token': globalConfig.creatorUserToken
     };
 
     try {
@@ -152,7 +160,7 @@ export async function reviewContent(identifier: string): Promise<void> {
         'X-Channel-Id': assessmentConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
-        'x-authenticated-user-token': globalConfig.userToken
+        'x-authenticated-user-token': globalConfig.creatorUserToken
     };
 
     const body = {
@@ -175,7 +183,7 @@ export async function publishContent(identifier: string): Promise<void> {
         'X-Channel-Id': assessmentConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
-        'x-authenticated-user-token': globalConfig.userToken
+        'x-authenticated-user-token': globalConfig.reviewerUserToken
     };
 
     const body = {
