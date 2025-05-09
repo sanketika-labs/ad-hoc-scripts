@@ -14,7 +14,7 @@ export async function searchCourse(courseCode: string): Promise<{ identifier: st
                 'Content-Type': 'application/json',
                 'X-Channel-Id': config.channelId,
                 'Authorization': config.apiAuthKey,
-                'x-authenticated-user-token': globalConfig.userToken
+                'x-authenticated-user-token': globalConfig.creatorUserToken
             },
             data: {
                 request: {
@@ -71,7 +71,7 @@ export async function createLearnerProfile(learnerCode: string, nodeIds: string[
                 'Content-Type': 'application/json',
                 'X-Channel-Id': config.channelId,
                 'Authorization': config.apiAuthKey,
-                'x-authenticated-user-token': globalConfig.userToken
+                'x-authenticated-user-token': globalConfig.creatorUserToken
             },
             data: {
                 request: {
@@ -168,7 +168,7 @@ export async function updateLearnerProfile(
           'Content-Type': 'application/json',
           'X-Channel-Id': config.channelId,
           'Authorization': config.apiAuthKey,
-          'x-authenticated-user-token': globalConfig.userToken
+          'x-authenticated-user-token': globalConfig.creatorUserToken
         },
         data: payload
       });
@@ -191,7 +191,7 @@ export async function getBatchList(courseId: string): Promise<string | null> {
                 'Content-Type': 'application/json',
                 'X-Channel-Id': config.channelId,
                 'Authorization': config.apiAuthKey,
-                'x-authenticated-user-token': globalConfig.userToken
+                'x-authenticated-user-token': globalConfig.creatorUserToken
             },
             data: {
                 request: {
@@ -253,7 +253,7 @@ export async function publishContent(identifier: string): Promise<void> {
         'X-Channel-Id': courseConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
-        'x-authenticated-user-token': globalConfig.userToken
+        'x-authenticated-user-token': globalConfig.reviewerUserToken
     };
 
     const body = {
@@ -266,7 +266,6 @@ export async function publishContent(identifier: string): Promise<void> {
 
     try {
         const response = await axios.post(`${config.baseUrl}${routes.publishContent}/${identifier}`, body, { headers });
-        console.log('Publish API Response:', response.data);
     } catch (error) {
         console.error('Publish API Error:');
         throw error;
