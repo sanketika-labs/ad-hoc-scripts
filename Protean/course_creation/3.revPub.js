@@ -48,7 +48,7 @@ const publishCourse = async (doId) => {
         const response = await axios.post(
             url,
             { request: { content: { lastPublishedBy: LAST_PUBLISHED_BY } } },
-            { headers: { ...headers, 'Cookie': undefined } } // Localhost probably doesn't need cookie
+            { headers: { ...headers} }
         );
         console.log(`🚀 Published: ${doId}`);
     } catch (err) {

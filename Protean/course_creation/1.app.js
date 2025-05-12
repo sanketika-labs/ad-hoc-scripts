@@ -82,20 +82,21 @@ const courseHierarchyMap = {}; // courseId => { courseName, moduleMap }
                 };
 
                 try {
-                    const moduleRes = await axios.post(`${API_BASE_URL}/content/v3/create`, modulePayload, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Channel-Id': CHANNEL_ID
-                        }
-                    });
+                    // const moduleRes = await axios.post(`${API_BASE_URL}/content/v3/create`, modulePayload, {
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //         'X-Channel-Id': CHANNEL_ID
+                    //     }
+                    // });
 
-                    const moduleId = moduleRes.data.result.identifier;
+                    // const moduleId = moduleRes.data.result.identifier;
                     courseHierarchyMap[courseId].moduleMap[moduleName] = {
-                        id: moduleId,
+                        id: uuidv4(),
+                        // module_do_id: moduleId,
                         children: children
                     };
 
-                    console.log(`  ↳ Created module "${moduleName}" → ID: ${moduleId}`);
+                    // console.log(`  ↳ Created module "${moduleName}" → ID: ${moduleId}`);
                 } catch (err) {
                     console.error(`❌ Failed to create module "${moduleName}"`);
                     console.error(err.response?.data || err.message);

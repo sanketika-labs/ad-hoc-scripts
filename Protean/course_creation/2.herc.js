@@ -57,6 +57,7 @@ const courseJson = JSON.parse(fs.readFileSync('./courses.json', 'utf-8'));
         };
 
         // Loop through modules
+        let count = 1;
         for (const [moduleName, moduleData] of Object.entries(moduleMap)) {
             const moduleId = moduleData.id;
             const children = moduleData.children || [];
@@ -71,6 +72,7 @@ const courseJson = JSON.parse(fs.readFileSync('./courses.json', 'utf-8'));
                 isNew: true,
                 metadata: {
                     mimeType: 'application/vnd.ekstep.content-collection',
+                    code: moduleId,
                     name: moduleName,
                     visibility: 'Parent',
                     contentType: 'CourseUnit',
@@ -84,7 +86,8 @@ const courseJson = JSON.parse(fs.readFileSync('./courses.json', 'utf-8'));
             // Add module hierarchy
             hierarchy[moduleId] = {
                 name: moduleName,
-                children: children,
+                children: [],
+                // children: children,
                 root: false
             };
         }
@@ -100,7 +103,7 @@ const courseJson = JSON.parse(fs.readFileSync('./courses.json', 'utf-8'));
             }
         };
 
-        console.log(payload.request.data.hierarchy);
+        // console.log('Payload:', JSON.stringify(payload, null, 2));
 
         try {
             const res = await axios.patch(`${API_BASE_URL}/content/v3/hierarchy/update`, payload, {
@@ -110,10 +113,65 @@ const courseJson = JSON.parse(fs.readFileSync('./courses.json', 'utf-8'));
                 }
             });
 
-            console.log(`✅ Hierarchy updated for course "${courseName}" (${courseId})`);
+            console.log('----------------------------------');
+            console.log(`✅ Hierarchy updated for course "${courseName}" (${courseId}) and result is \n`);
+            console.log(JSON.stringify(res.data, null, 2));
+            console.log('----------------------------------');
+            // updating course unit
+            let mmap = hierarchyMap[courseId].moduleMap;
+            setTimeout(async ()=>{
+                let c2 = 0
+                for (let i in mmap) {
+                let children = mmap[i].children;
+                let moduleId = res.data.result.identifiers[mmap[i].id];
+                console.log('moduleId to children',moduleId,children);
+                setTimeout(async ()=>{
+                    await updateCourseUnit(courseId, moduleId, children);
+                }
+                ,5000*c2);
+                c2++;
+            }
+            },5000* count);
+            count++;
+
         } catch (err) {
             console.error(`❌ Failed to update hierarchy for course "${courseName}" (${courseId})`);
             console.error(err.response?.data || err.message);
         }
     }
 })();
+
+
+
+async function updateCourseUnit(courseId, moduleId, children) {
+    let data = JSON.stringify({
+        "request": {
+            "rootId": courseId,
+            "unitId": moduleId,
+            "children": children
+        }
+    });
+
+    
+
+    let config = {
+        method: 'patch',
+        maxBodyLength: Infinity,
+        url: `${API_BASE_URL}/content/v3/hierarchy/add`,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: data
+    };
+
+    axios.request(config)
+        .then((response) => {
+            console.log("Updating course unit");
+            console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+            console.log(error.response.data);
+        });
+
+}
