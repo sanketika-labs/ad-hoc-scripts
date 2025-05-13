@@ -37,7 +37,7 @@
         "hierarchy": {
             "تعريف التربية الوالدية": [
                 "do_2143096896206766081176",
-                "do_2143096896206766081176"
+                "do_214311653141028864114"
             ],
             "أهمية وأهداف التربية الوالدية": [
                 "do_2143096914864455681177"
@@ -53,6 +53,62 @@
             ],
             "فوائد مشاركة الآباء وأولياء الأمور في العملية التعليمية التعلمية": [
                 "do_2143097002543513601190"
+            ]
+        }
+    },
+    {
+        "name": null,
+        "description": "مصوغة None تهدف إلى تزويد المربي بالكفايات والمعارف الضرورية لتحسين الممارسة التربوية وتعزيز جودة التعليم الأولي.",
+        "createdBy": "927c2094-987f-4e8f-8bd5-8bf93e3d2e8a",
+        "organisation": "FMPS Org",
+        "createdFor": [
+            "01429195271738982411"
+        ],
+        "mimeType": "application/vnd.ekstep.content-collection",
+        "resourceType": "Course",
+        "contentType": "Course",
+        "creator": "Content Creator FMPS",
+        "primaryCategory": "Course",
+        "framework": "FMPS",
+        "organisationIds": [
+            "fmps_organisation_fmps"
+        ],
+        "languageIds": [
+            "fmps_language_arabic"
+        ],
+        "audience": [
+            "Student",
+            "Teacher"
+        ],
+        "targetlanguageIds": [
+            "fmps_language_arabic",
+            "fmps_language_french"
+        ],
+        "author": "John Doe",
+        "copyright": "FMPS",
+        "copyrightYear": "FMPS",
+        "license": "CC BY 4.0",
+        "additionalCategories": [
+            "Digital Textbook"
+        ],
+        "hierarchy": {
+            "null": [
+                "do_2143096896206766081176",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114",
+                "do_214311653141028864114"
             ]
         }
     },
@@ -93,7 +149,8 @@
         ],
         "hierarchy": {
             "تعريف نظريات التعلم واهميتها": [
-                "do_2143097033594224641192"
+                "do_2143097033594224641192",
+                "do_214311653141028864114"
             ],
             "النظرية السلوكية": [
                 "do_2143097042672599041193"
