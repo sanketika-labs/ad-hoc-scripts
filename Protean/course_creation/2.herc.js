@@ -128,10 +128,10 @@ const courseJson = JSON.parse(fs.readFileSync('./courses.json', 'utf-8'));
                 setTimeout(async ()=>{
                     await updateCourseUnit(courseId, moduleId, children);
                 }
-                ,5000*c2);
+                ,3000*c2);
                 c2++;
             }
-            },5000* count);
+            },3000* count);
             count++;
 
         } catch (err) {

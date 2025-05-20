@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const { readFileSync, writeFileSync } = require('fs');
 
 // dotenv.config('./.env');
-console.log('Environment Variables:', process.env.BASE_URL)
+// console.log('Environment Variables:', process.env.BASE_URL)
 // Load course data
 const courses = JSON.parse(readFileSync('./courses.json', 'utf-8'));
 
@@ -12,6 +12,13 @@ const courses = JSON.parse(readFileSync('./courses.json', 'utf-8'));
 const API_BASE_URL = 'http://localhost:8080';
 const CHANNEL_ID = '01429195271738982411';
 const CREATED_BY = '927c2094-987f-4e8f-8bd5-8bf93e3d2e8a';
+const LIVE_URL = 'https://dev-fmps.sunbirded.org';
+const CLIENT_ID = 'direct-grant';
+const CLIENT_SECRET = '9fe26321-7cba-4131-8cf3-e02a951b81e2';
+const USERNAME = 'contentcreator-fmps@yopmail.com';
+const PASSWORD = 'CreatorFmps@123';
+const REALM = 'sunbird';
+const API_KEY = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGlfYWRtaW4ifQ.-qfZEwBAoHFhxNqhGq7Vy_SNVcwB1AtMX8xbiVHF5FQ';
 
 // To hold live mapping for hierarchy update
 const courseHierarchyMap = {}; // courseId => { courseName, moduleMap }
@@ -24,7 +31,7 @@ const courseHierarchyMap = {}; // courseId => { courseName, moduleMap }
                 content: {
                     name: course.name,
                     description: course.description,
-                    code: uuidv4(),
+                    code: course.code,
                     mimeType: course.mimeType,
                     createdBy: course.createdBy,
                     createdFor: course.createdFor,
@@ -52,6 +59,7 @@ const courseHierarchyMap = {}; // courseId => { courseName, moduleMap }
             courseId = courseRes.data.result.identifier;
             console.log(`✅ Created course "${course.name}" → ID: ${courseId}`);
         } catch (err) {
+            console.error(`❌ Failed to create course "${err}`);
             console.error(`❌ Failed to create course "${course.name}"`);
             console.error(err.response?.data || err.message);
             continue;
@@ -63,40 +71,18 @@ const courseHierarchyMap = {}; // courseId => { courseName, moduleMap }
             moduleMap: {} // moduleName => { id, children }
         };
 
+
         // 2. CREATE MODULES IF HIERARCHY EXISTS
         const hierarchy = course.hierarchy;
         if (hierarchy && Object.keys(hierarchy).length > 0) {
             for (const [moduleName, children] of Object.entries(hierarchy)) {
-                const modulePayload = {
-                    request: {
-                        content: {
-                            name: moduleName,
-                            code: uuidv4(),
-                            mimeType: "application/vnd.ekstep.content-collection",
-                            contentType: "CourseUnit",
-                            primaryCategory: "Course Unit",
-                            createdBy: CREATED_BY,
-                            framework: course.framework
-                        }
-                    }
-                };
 
                 try {
-                    // const moduleRes = await axios.post(`${API_BASE_URL}/content/v3/create`, modulePayload, {
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //         'X-Channel-Id': CHANNEL_ID
-                    //     }
-                    // });
-
-                    // const moduleId = moduleRes.data.result.identifier;
                     courseHierarchyMap[courseId].moduleMap[moduleName] = {
                         id: uuidv4(),
-                        // module_do_id: moduleId,
                         children: children
                     };
 
-                    // console.log(`  ↳ Created module "${moduleName}" → ID: ${moduleId}`);
                 } catch (err) {
                     console.error(`❌ Failed to create module "${moduleName}"`);
                     console.error(err.response?.data || err.message);
