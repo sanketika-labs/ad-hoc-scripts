@@ -10,15 +10,16 @@ const courses = JSON.parse(readFileSync('./courses.json', 'utf-8'));
 
 // Config
 const API_BASE_URL = 'http://localhost:8080';
-const CHANNEL_ID = '01429195271738982411';
-const CREATED_BY = '927c2094-987f-4e8f-8bd5-8bf93e3d2e8a';
-const LIVE_URL = 'https://dev-fmps.sunbirded.org';
+const CHANNEL_ID = '0143146729170944000';
+const CREATED_BY = '5c0cc434-1d98-474c-85f3-a4dbd29b4e21';
+const LIVE_URL = 'https://maharat.fmps.ma';
 const CLIENT_ID = 'direct-grant';
-const CLIENT_SECRET = '9fe26321-7cba-4131-8cf3-e02a951b81e2';
+const CLIENT_SECRET = 'direct-grantC60KFP05Wt4WO3bs';
 const USERNAME = 'contentcreator-fmps@yopmail.com';
 const PASSWORD = 'CreatorFmps@123';
 const REALM = 'sunbird';
-const API_KEY = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGlfYWRtaW4ifQ.-qfZEwBAoHFhxNqhGq7Vy_SNVcwB1AtMX8xbiVHF5FQ';
+// const API_KEY = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGlfYWRtaW4ifQ.-qfZEwBAoHFhxNqhGq7Vy_SNVcwB1AtMX8xbiVHF5FQ';
+const API_KEY = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGlfYWRtaW4ifQ.29h7_XRriDhgKQHWBV4aP49kv0yI6K1yxUCPDreWoEE';
 
 // To hold live mapping for hierarchy update
 const courseHierarchyMap = {}; // courseId => { courseName, moduleMap }

@@ -3,19 +3,22 @@ const axios = require('axios');
 const fs = require('fs');
 const qs = require('qs');
 
+
+
 // Load mappings
 const hierarchyMap = JSON.parse(fs.readFileSync('./courseHierarchyMap.json', 'utf-8'));
-const LAST_PUBLISHED_BY = '72813dc0-e217-45c3-b01a-0067a7d611fb'; // as per your example
+const LAST_PUBLISHED_BY = '5c0cc434-1d98-474c-85f3-a4dbd29b4e21'; // as per your example
 const API_BASE_URL = 'http://localhost:8080';
-const CHANNEL_ID = '01429195271738982411';
-const CREATED_BY = '927c2094-987f-4e8f-8bd5-8bf93e3d2e8a';
-const LIVE_URL = 'https://dev-fmps.sunbirded.org';
+const CHANNEL_ID = '0143146729170944000';
+const CREATED_BY = '5c0cc434-1d98-474c-85f3-a4dbd29b4e21';
+const LIVE_URL = 'https://maharat.fmps.ma';
 const CLIENT_ID = 'direct-grant';
-const CLIENT_SECRET = '9fe26321-7cba-4131-8cf3-e02a951b81e2';
+const CLIENT_SECRET = 'direct-grantC60KFP05Wt4WO3bs';
 const USERNAME = 'contentcreator-fmps@yopmail.com';
 const PASSWORD = 'CreatorFmps@123';
 const REALM = 'sunbird';
-const API_KEY = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGlfYWRtaW4ifQ.-qfZEwBAoHFhxNqhGq7Vy_SNVcwB1AtMX8xbiVHF5FQ';
+// const API_KEY = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGlfYWRtaW4ifQ.-qfZEwBAoHFhxNqhGq7Vy_SNVcwB1AtMX8xbiVHF5FQ';
+const API_KEY = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGlfYWRtaW4ifQ.29h7_XRriDhgKQHWBV4aP49kv0yI6K1yxUCPDreWoEE';
 
 
 
@@ -35,7 +38,7 @@ const reviewCourse = async (doId) => {
         console.log(`✅ Reviewed: ${doId}`);
         return true;
     } catch (err) {
-        console.error(`❌ Review failed: ${doId}`, err.response?.data || err.message);
+        console.error(`❌ Review failed: ${doId}`);
         return false;
     }
 };
@@ -50,7 +53,7 @@ const publishCourse = async (doId) => {
         );
         console.log(`🚀 Published: ${doId}`);
     } catch (err) {
-        console.error(`❌ Publish failed: ${doId}`, err.response?.data || err.message);
+        console.error(`❌ Publish failed: ${doId}`);
     }
 };
 
@@ -74,7 +77,7 @@ try {
     });
     return response.data; // Contains access_token and refresh_token
 } catch (error) {
-    console.error('Error obtaining tokens:', error.response?.data || error.message);
+    console.error('Error obtaining tokens:');
     throw error;
 }
 }
@@ -95,7 +98,7 @@ try {
     });
     return response.data; // Contains new access_token and refresh_token
 } catch (error) {
-    console.error('Error refreshing access token:', error.response?.data || error.message);
+    console.error('Error refreshing access token:');
     throw error;
 }
 }
@@ -160,8 +163,8 @@ try {
     });
     return response.data;
 } catch (error) {
-    console.error('Error creating batch:', error.response?.data || error.message);
-    throw error;
+    console.error('Error creating batch:');
+    // throw error;
 }
 }
 
@@ -172,8 +175,11 @@ try {
         const reviewed = await reviewCourse(doId);
         if (reviewed) {
             await publishCourse(doId);
-            const batchResponse = await createBatch(doId,refreshedTokens.result.access_token);
-            batchResponse.result.batchId ? console.log(`Batch ID: ${batchResponse.result.batchId}`) : console.log('No Batch ID found');
+            // const batchResponse = await createBatch(doId,refreshedTokens.result.access_token);
+            //     batchResponse.result.batchId ? console.log(`Batch ID: ${batchResponse.result.batchId}`) : console.log('No Batch ID found');
+            // setInterval(async () => {
+                
+            // }, 3000);
         }
     }
 })();

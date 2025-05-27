@@ -1,0 +1,11 @@
+code,questions,quiz_name,max_attempts,language,quiz_type
+FMPS_C001_QV01,"FMPS_C001_QV01_Q_1,FMPS_C001_QV01_Q_2,FMPS_C001_QV01_Q_3,FMPS_C001_QV01_Q_4,FMPS_C001_QV01_Q_5",الاختبار التواصل المهني,2,Arabic,practice
+FMPS_C001_QV02,"FMPS_C001_QV02_Q_1,FMPS_C001_QV02_Q_2,FMPS_C001_QV02_Q_3,FMPS_C001_QV02_Q_4,FMPS_C001_QV02_Q_5",الاختبار التواصل المهني الفعال,2,Arabic,practice
+FMPS_C001_QV03,"FMPS_C001_QV03_Q_1,FMPS_C001_QV03_Q_2,FMPS_C001_QV03_Q_3,FMPS_C001_QV03_Q_4,FMPS_C001_QV03_Q_5",الاختبار التعرف على مهارات التواصل المهني,2,Arabic,practice
+FMPS_C001_QV04,"FMPS_C001_QV04_Q_1,FMPS_C001_QV04_Q_2,FMPS_C001_QV04_Q_3,FMPS_C001_QV04_Q_4,FMPS_C001_QV04_Q_5",الاختبار تحديد اشكال التواصل المهني,2,Arabic,practice
+FMPS_C006_QV06,"FMPS_C006_QV06_Q_1,FMPS_C006_QV06_Q_2,FMPS_C006_QV06_Q_3,FMPS_C006_QV06_Q_4,FMPS_C006_QV06_Q_5,FMPS_C006_QV06_Q_6,FMPS_C006_QV06_Q_7,FMPS_C006_QV06_Q_8,FMPS_C006_QV06_Q_9,FMPS_C006_QV06_Q_10",الاختبار مبدأ التدرج الخاص بملصق اليومية,2,Arabic,practice
+FMPS_C008_QV02,"FMPS_C008_QV02_Q_1,FMPS_C008_QV02_Q_2,FMPS_C008_QV02_Q_3,FMPS_C008_QV02_Q_4,FMPS_C008_QV02_Q_5,FMPS_C008_QV02_Q_6",الاختبار تعريف بيداغوجية اللعب,2,Arabic,practice
+FMPS_C008_QV05,"FMPS_C008_QV05_Q_6,FMPS_C008_QV05_Q_1,FMPS_C008_QV05_Q_2,FMPS_C008_QV05_Q_3,FMPS_C008_QV05_Q_4",الاختبار الألعاب الحسية في التعليم الأولي,2,Arabic,practice
+FMPS_C008_QV08,"FMPS_C008_QV08_Q_1,FMPS_C008_QV08_Q_2,FMPS_C008_QV08_Q_3,FMPS_C008_QV08_Q_4,FMPS_C008_QV08_Q_5,FMPS_C008_QV08_Q_6",الاختبار الالعاب اللغوية و أهدافها في التعليم الأولي,2,Arabic,practice
+FMPS_C009_QV04,"FMPS_C009_QV04_Q_1,FMPS_C009_QV04_Q_2,FMPS_C009_QV04_Q_3,FMPS_C009_QV04_Q_4,FMPS_C009_QV04_Q_5,FMPS_C009_QV04_Q_6,FMPS_C009_QV04_Q_7",الاختبار ربط الأنشطة الإبداعية والأنشطة التعليمية للطفل,2,Arabic,practice
+FMPS_C011_QV02,"FMPS_C011_QV02_Q_1,FMPS_C011_QV02_Q_2,FMPS_C011_QV02_Q_3,FMPS_C011_QV02_Q_4",الاختبار التعرف على مهارات القراءة,2,Arabic,practice

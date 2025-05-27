@@ -4,8 +4,8 @@ const fs = require('fs');
 
 // Config
 const API_BASE_URL = 'http://localhost:8080';
-const CHANNEL_ID = '01429195271738982411';
-const UPDATED_BY = '927c2094-987f-4e8f-8bd5-8bf93e3d2e8a';
+const CHANNEL_ID = '0143146729170944000';
+const UPDATED_BY = '5c0cc434-1d98-474c-85f3-a4dbd29b4e21';
 
 // Load mappings
 const hierarchyMap = JSON.parse(fs.readFileSync('./courseHierarchyMap.json', 'utf-8'));
@@ -151,8 +151,6 @@ async function updateCourseUnit(courseId, moduleId, children) {
             "children": children
         }
     });
-
-    
 
     let config = {
         method: 'patch',
