@@ -1,0 +1,5 @@
+"email","userId","batchId","courseId","status","remark"
+"sunbird.test12@yopmail.com","df09e85a-9b46-4362-917c-70bd90a25302","0143125848864276484","do_214312567245635584153","failure","User is not enrolled to given course batch."
+"sunbird.test12@yopmail.com","df09e85a-9b46-4362-917c-70bd90a25302","0143197355511234563","do_214319703660781568133","failure","User is not enrolled to given course batch."
+"admin@yopmail.com","4ecb6471-2da4-4937-af6d-0a7cc839d0f9","0143095533752565767","do_214309541302353920199","failure","User is not enrolled to given course batch."
+"admin@yopmail.com","4ecb6471-2da4-4937-af6d-0a7cc839d0f9","01430882810481049616","do_214308818664030208153","failure","User is not enrolled to given course batch."

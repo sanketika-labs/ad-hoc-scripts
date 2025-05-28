@@ -1,0 +1,2 @@
+email,courseId,batchId,userId
+<<email>,<<courseId>>,<<batchId>>,<<userId>>
