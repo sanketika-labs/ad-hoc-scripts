@@ -13,9 +13,14 @@ const GRANT_TYPE = 'password';
 const CHANNEL_ID = '01429195271738982411';
 const CREATOR_USERNAME = 'contentcreator-fmps';
 const CREATOR_PASSWORD = 'CreatorFmps@123';
+const CREATED_BY = '927c2094-987f-4e8f-8bd5-8bf93e3d2e8a'
 
 const outputRows = [];
 const OUTPUT_FILE = 'output_report.csv';
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function getKeycloakToken(username, password) {
   const url = `${HOST}/auth/realms/sunbird/protocol/openid-connect/token`;
@@ -68,7 +73,7 @@ async function getUserId(email, userAccessToken) {
   return users[0].id;
 }
 
-async function getCourseAndBatch(courseCode, creatorAccessToken, userToken) {
+async function getCourseAndBatch(courseCode, learningProfileCode, userToken) {
   const url = `${HOST}/api/composite/v1/search`;
   const payload = { request: { filters: { code: courseCode } } };
 
@@ -82,10 +87,28 @@ async function getCourseAndBatch(courseCode, creatorAccessToken, userToken) {
     }
   });
 
-  const courses = res.data.result.content;
+  const courses = res.data.result.content;  
   if (!courses || courses.length === 0) throw new Error(`Course not found: ${courseCode}`);
   const course = courses[0];
-  const batchId = course.batches?.[0]?.batchId;
+
+  const batchUrl = `${HOST}/api/course/v1/batch/list`;
+  const batchPayload = { request: { filters: { courseId: course.identifier, createdBy: CREATED_BY,  name: courseCode+"_"+learningProfileCode} } };
+
+  const batchRes = await axios.post(batchUrl, batchPayload, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'X-Channel-Id': CHANNEL_ID,
+      'Authorization': `Bearer ${API_KEY}`,
+      'x-authenticated-user-token': userToken,
+    }
+  });
+  
+  const batches = batchRes.data.result.response.content;  
+  if (!batches || batches.length === 0) throw new Error(`No batch found for course ${courseCode}`);
+
+  const batchId = batches?.find(b => b.name === courseCode+"_"+learningProfileCode)?.batchId;
+
   if (!batchId) throw new Error(`No batch found for course ${courseCode}`);
   return { courseId: course.identifier, batchId };
 }
@@ -176,28 +199,29 @@ async function updateContentState(userId, contentId, batchId, courseId, userAcce
       .on('end', async () => {
         for (const row of allRows) {
           const email = row.email.trim();
-          const password = row.password.trim();
+          const learningProfileCode = row.learning_profile_code.trim();
           const codes = row.course_code.split(',').map(c => c.trim().replace(/"/g, ''));
 
           console.log(`Processing: ${email}`);
 
           try {
-            const userTokenResp = await getKeycloakToken(email, password);
+            const userTokenResp = await getKeycloakToken(email, '');
             const userAccess = await refreshAccessToken(userTokenResp.refresh_token);
             const userId = await getUserId(email, userAccess.access_token);
 
             for (const code of codes) {
               try {
-                const { courseId, batchId } = await getCourseAndBatch(code, creatorAccess.access_token, userAccess.access_token);
+                const { courseId, batchId } = await getCourseAndBatch(code, learningProfileCode, creatorAccess.access_token, userAccess.access_token);
                 const contentIds = await getContentIds(courseId, creatorAccess.access_token);
-
+                  
+                console.log(`Processing userId-${userId}, batchId-${batchId}, courseId-${courseId}`);
                 for (const contentId of contentIds) {
                   await updateContentState(userId, contentId, batchId, courseId, userAccess.access_token);
                 }
 
                 outputRows.push({
                   email,
-                  password,
+                  learningProfileCode,
                   course_code: code,
                   status: 'success',
                   remark: ''
@@ -205,25 +229,31 @@ async function updateContentState(userId, contentId, batchId, courseId, userAcce
               } catch (err) {
                 outputRows.push({
                   email,
-                  password,
+                  learningProfileCode,
                   course_code: code,
                   status: 'failure',
                   remark: err.message
                 });
               }
+
             }
+
+            // Delay to prevent hitting the API rate limit
+            await delay(200);
+
           } catch (err) {
             outputRows.push({
               email,
-              password,
+              learningProfileCode,
               course_code: row.course_code,
               status: 'failure',
               remark: err.message
             });
           }
+
         }
 
-        const fields = ['email', 'password', 'course_code', 'status', 'remark'];
+        const fields = ['email', 'learningProfileCode', 'course_code', 'status', 'remark'];
         const json2csvParser = new Parser({ fields });
         const csvData = json2csvParser.parse(outputRows);
 

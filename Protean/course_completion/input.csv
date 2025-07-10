@@ -1,2 +1,2 @@
-email,password,course_code
-sunbirdtest@gmail.com,Fmps@1234,"FMPS_C003"
+email,learning_profile_code,course_code
+testuser@test.com,test_profile,"course_001,course_002"
