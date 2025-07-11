@@ -10,16 +10,15 @@ const courses = JSON.parse(readFileSync('./courses.json', 'utf-8'));
 
 // Config
 const API_BASE_URL = 'http://localhost:8080';
-const CHANNEL_ID = '0143146729170944000';
-const CREATED_BY = '5c0cc434-1d98-474c-85f3-a4dbd29b4e21';
-const LIVE_URL = 'https://maharat.fmps.ma';
-const CLIENT_ID = 'direct-grant';
-const CLIENT_SECRET = 'direct-grantC60KFP05Wt4WO3bs';
-const USERNAME = 'contentcreator-fmps@yopmail.com';
-const PASSWORD = 'CreatorFmps@123';
-const REALM = 'sunbird';
-// const API_KEY = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGlfYWRtaW4ifQ.-qfZEwBAoHFhxNqhGq7Vy_SNVcwB1AtMX8xbiVHF5FQ';
-const API_KEY = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGlfYWRtaW4ifQ.29h7_XRriDhgKQHWBV4aP49kv0yI6K1yxUCPDreWoEE';
+const CHANNEL_ID = '<<channel-id>>';
+const CREATED_BY = '<<creator-userid>>';
+const LIVE_URL = '<<host>>';
+const CLIENT_ID = '<<client-id>>';
+const CLIENT_SECRET = '<<client-secret>>';
+const USERNAME = '<<creator-username>>';
+const PASSWORD = '<<creator-password>>';
+const REALM = '<<realm>>';
+const API_KEY = 'Bearer <<api-key>>';
 
 // To hold live mapping for hierarchy update
 const courseHierarchyMap = {}; // courseId => { courseName, moduleMap }

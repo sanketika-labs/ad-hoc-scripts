@@ -4,8 +4,8 @@ const fs = require('fs');
 
 // Config
 const API_BASE_URL = 'http://localhost:8080';
-const CHANNEL_ID = '0143146729170944000';
-const UPDATED_BY = '5c0cc434-1d98-474c-85f3-a4dbd29b4e21';
+const CHANNEL_ID = '<<channel-id>>';
+const UPDATED_BY = '<<creator-userid>>';
 
 // Load mappings
 const hierarchyMap = JSON.parse(fs.readFileSync('./courseHierarchyMap.json', 'utf-8'));

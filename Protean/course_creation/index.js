@@ -5,8 +5,8 @@ const fs = require('fs');
 
 
 const API_BASE_URL = process.env.BASE_URL;
-const CHANNEL_ID = '01429195271738982411';
-const CREATED_BY = '927c2094-987f-4e8f-8bd5-8bf93e3d2e8a';
+const CHANNEL_ID = '<<channel-id>>';
+const CREATED_BY = '<<creator-userid>>';
 
 const courses = JSON.parse(fs.readFileSync('./courses.json', 'utf-8'));
 
