@@ -5,15 +5,15 @@ const axios = require('axios');
 const { Parser } = require('json2csv');
 const { log } = require('console');
 
-const HOST = 'https://dev-fmps.sunbirded.org';
-const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGlfYWRtaW4ifQ.-qfZEwBAoHFhxNqhGq7Vy_SNVcwB1AtMX8xbiVHF5FQ';
-const CLIENT_ID = 'direct-grant';
-const CLIENT_SECRET = '9fe26321-7cba-4131-8cf3-e02a951b81e2';
-const GRANT_TYPE = 'password';
-const CHANNEL_ID = '01429195271738982411';
-const CREATOR_USERNAME = 'contentcreator-fmps';
-const CREATOR_PASSWORD = 'CreatorFmps@123';
-const CREATED_BY = '927c2094-987f-4e8f-8bd5-8bf93e3d2e8a'
+const HOST = '<<host>>';
+const API_KEY = '<<api_key>>';
+const CLIENT_ID = '<<client-id>>';
+const CLIENT_SECRET = '<<client-secret>>';
+const GRANT_TYPE = '<<grant-type>>';
+const CHANNEL_ID = '<<channel-id>>';
+const CREATOR_USERNAME = '<<creater-username>>';
+const CREATOR_PASSWORD = '<<creator-password>>';
+const CREATED_BY = '<<creater-userid>>'
 
 const outputRows = [];
 const OUTPUT_FILE = 'output_report.csv';
