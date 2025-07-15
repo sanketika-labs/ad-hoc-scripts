@@ -17,8 +17,9 @@ const getFormattedTimestamp = () => {
 };
 
 const outputFilePath = `./Prod_Imported_Users_Report-${getFormattedTimestamp()}.csv`;
-//const API_BASE_URL = "https://dev-fmps.sunbirded.org/";
-const API_BASE_URL = "https://maharat.fmps.ma/";
+const API_BASE_URL = "<<host>>";
+const API_TOKEN = "<<api-key>>";
+const USER_TOKEN = "<<user-token>>";
 
 const results = [];
 
@@ -30,9 +31,9 @@ const results = [];
 
 const headers = {
     "Content-Type": "application/json",
-  //  Authorization: "",
-  //  "x-authenticated-user-token": "",
-  };
+    "Authorization": `Bearer ${API_TOKEN}`,
+    "x-authenticated-user-token": USER_TOKEN,
+};
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -46,6 +47,7 @@ function buildPayload(user, isSSO) {
     trainingGroup: user["training_profile"] || "",
     province: user["province"] || "",
     category: user["Category"] || "",
+    designation: user["designation"] || "",
   });
 
   return {
@@ -55,12 +57,13 @@ function buildPayload(user, isSSO) {
       lastName: user.last_name,
       email: user.email,
       language: ["Arabic", "English", "French"],
-      framework_languages: ["Arabic", "English", "French"],
+      //framework_languages: ["Arabic", "English", "French"],
       cin: user["cin"] || "",
       fmps_id: user["fmps_id"] || "",
       training_profile: user["training_profile"] || "",
       province: user["province"] || "",
       framework: {
+        language: ["Arabic", "English", "French"],
         category: [],
         id: ["FMPS"],
         organisation: [user.frameworkOrganisation || "FMPS"],
@@ -122,7 +125,7 @@ async function runUserCreationScript() {
           continue;
         }
 
-        console.log(`🚶‍♂️ Processing user: ${user.user_name || user.email}...`);
+        console.log(`🚶‍♂️ Processing user(${index + 1}/${results.length}): ${user.user_name || user.email}...`);
         const result = await callApi(user, isSSO);
 
         if (result.success) {
