@@ -3,7 +3,7 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const axios = require('axios');
 const { Parser } = require('json2csv');
-const { log } = require('console');
+const pLimit = require('p-limit').default;
 
 const HOST = '<<host>>';
 const API_KEY = '<<api_key>>';
@@ -13,13 +13,34 @@ const GRANT_TYPE = '<<grant-type>>';
 const CHANNEL_ID = '<<channel-id>>';
 const CREATOR_USERNAME = '<<creater-username>>';
 const CREATOR_PASSWORD = '<<creator-password>>';
-const CREATED_BY = '<<creater-userid>>'
+const CREATED_BY = '<<creator-user-id>>';
 
 const outputRows = [];
 const OUTPUT_FILE = 'output_report.csv';
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Global request rate limiter
+let requestCount = 0;
+let isPaused = false;
+// setInterval(() => { requestCount = 0; }, 1000);
+
+async function safeApiCall(fn) {
+  // while (requestCount >= 30) {
+  //   await delay(300); // wait if limit reached
+  // }
+
+  // if (requestCount >= 30 && !isPaused) {
+  //   isPaused = true;
+  //   await delay(1000);         // Wait 1 second after 30 requests
+  //   requestCount = 0;          // Reset counter after delay
+  //   isPaused = false;
+  // }
+
+  // requestCount++; // count this request
+  return fn(); // execute the request
 }
 
 async function getKeycloakToken(username, password) {
@@ -31,12 +52,14 @@ async function getKeycloakToken(username, password) {
   params.append('username', username);
   params.append('password', password);
 
-  const res = await axios.post(url, params, {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Bearer ${API_KEY}`,
-    }
-  });
+  const res = await safeApiCall(() =>
+    axios.post(url, params, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Bearer ${API_KEY}`,
+      }
+    })
+  );
 
   return res.data;
 }
@@ -46,13 +69,15 @@ async function refreshAccessToken(refreshToken) {
   const params = new URLSearchParams();
   params.append('refresh_token', refreshToken);
 
-  const res = await axios.post(url, params, {
-    headers: {
-      'Authorization': `Bearer ${API_KEY}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    }
-  });
-
+  const res = await safeApiCall(() =>
+    axios.post(url, params, {
+      headers: {
+        'Authorization': `Bearer ${API_KEY}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    })
+  );
+  
   return res.data.result;
 }
 
@@ -60,54 +85,68 @@ async function getUserId(email, userAccessToken) {
   const url = `${HOST}/api/user/v1/search`;
   const payload = { request: { filters: { email } } };
 
-  const res = await axios.post(url, payload, {
-    headers: {
-      'Authorization': `Bearer ${API_KEY}`,
-      'x-authenticated-user-token': userAccessToken,
-      'Content-Type': 'application/json',
-    }
-  });
+  const res = await safeApiCall(() =>
+    axios.post(url, payload, {
+      headers: {
+        'Authorization': `Bearer ${API_KEY}`,
+        'x-authenticated-user-token': userAccessToken,
+        'Content-Type': 'application/json',
+      }
+    })
+  );
 
   const users = res.data.result.response.content;
   if (!users || users.length === 0) throw new Error(`User not found for email ${email}`);
   return users[0].id;
 }
 
-async function getCourseAndBatch(courseCode, learningProfileCode, userToken) {
+async function getCourseAndBatch(courseCode, learningProfileCode, creatorToken, userToken) {
   const url = `${HOST}/api/composite/v1/search`;
   const payload = { request: { filters: { code: courseCode } } };
 
-  const res = await axios.post(url, payload, {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'X-Channel-Id': CHANNEL_ID,
-      'Authorization': `Bearer ${API_KEY}`,
-      'x-authenticated-user-token': userToken,
-    }
-  });
+  const res = await safeApiCall(() =>
+    axios.post(url, payload, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Channel-Id': CHANNEL_ID,
+        'Authorization': `Bearer ${API_KEY}`,
+        'x-authenticated-user-token': userToken,
+      }
+    })
+  );
 
-  const courses = res.data.result.content;  
+  const courses = res.data.result.content;
   if (!courses || courses.length === 0) throw new Error(`Course not found: ${courseCode}`);
   const course = courses[0];
 
   const batchUrl = `${HOST}/api/course/v1/batch/list`;
-  const batchPayload = { request: { filters: { courseId: course.identifier, createdBy: CREATED_BY,  name: courseCode+"_"+learningProfileCode} } };
-
-  const batchRes = await axios.post(batchUrl, batchPayload, {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'X-Channel-Id': CHANNEL_ID,
-      'Authorization': `Bearer ${API_KEY}`,
-      'x-authenticated-user-token': userToken,
+  const batchPayload = {
+    request: {
+      filters: {
+        courseId: course.identifier,
+        createdBy: CREATED_BY,
+        name: `${courseCode}_${learningProfileCode}`
+      }
     }
-  });
-  
-  const batches = batchRes.data.result.response.content;  
-  if (!batches || batches.length === 0) throw new Error(`No batch found for course ${courseCode}`);
+  };
 
-  const batchId = batches?.find(b => b.name === courseCode+"_"+learningProfileCode)?.batchId;
+  const batchRes = await safeApiCall(() =>
+    axios.post(batchUrl, batchPayload, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Channel-Id': CHANNEL_ID,
+        'Authorization': `Bearer ${API_KEY}`,
+        'x-authenticated-user-token': userToken,
+      }
+    })
+  );
+
+  const batches = batchRes.data.result.response.content;
+  if (!batches || batches.length === 0) throw new Error(`No batch found for course ${courseCode}`);
+  
+  const batchId = batches?.find(b => b.name === `${courseCode}_${learningProfileCode}`)?.batchId;
 
   if (!batchId) throw new Error(`No batch found for course ${courseCode}`);
   return { courseId: course.identifier, batchId };
@@ -115,13 +154,15 @@ async function getCourseAndBatch(courseCode, learningProfileCode, userToken) {
 
 async function getContentIds(courseId, creatorAccessToken) {
   const url = `${HOST}/api/collection/v1/hierarchy/${courseId}`;
-  const res = await axios.get(url, {
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${API_KEY}`,
-      'x-authenticated-user-token': creatorAccessToken,
-    }
-  });
+  const res = await safeApiCall(() =>
+    axios.get(url, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`,
+        'x-authenticated-user-token': creatorAccessToken,
+      }
+    })
+  );
 
   const traverse = (node, arr = []) => {
     if (node.contentType && node.contentType !== 'Course') {
@@ -172,96 +213,96 @@ async function updateContentState(userId, contentId, batchId, courseId, userAcce
     }
   };
 
-  await axios.patch(url, payload, {
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Channel-Id': CHANNEL_ID,
-      'Authorization': `Bearer ${API_KEY}`,
-      'x-authenticated-user-token': userAccessToken,
+  await safeApiCall(() =>
+    axios.patch(url, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Channel-Id': CHANNEL_ID,
+        'Authorization': `Bearer ${API_KEY}`,
+        'x-authenticated-user-token': userAccessToken,
+      }
+    })
+  );
+}
+
+async function processRow(row, creatorToken) {
+  const email = row.email.trim();
+  const learningProfileCode = row.learning_profile_code.trim();
+  const codes = row.course_code.split(',').map(c => c.trim().replace(/"/g, ''));
+
+  console.log(`Processing: ${email}`);
+
+  try {
+    const userTokenResp = await getKeycloakToken(email, '');
+    const userAccess = await refreshAccessToken(userTokenResp.refresh_token);
+    const userId = await getUserId(email, userAccess.access_token);
+    
+    for (const code of codes) {
+      try {
+        const { courseId, batchId } = await getCourseAndBatch(code, learningProfileCode, creatorToken, userAccess.access_token);
+        const contentIds = await getContentIds(courseId, creatorToken);
+
+        console.log(`Processing userId-${userId}, batchId-${batchId}, courseId-${courseId}`);
+        for (const contentId of contentIds) {
+          await updateContentState(userId, contentId, batchId, courseId, userAccess.access_token);
+        }
+
+        outputRows.push({
+          email,
+          learningProfileCode,
+          course_code: code,
+          status: 'success',
+          remark: ''
+        });
+
+      } catch (err) {
+        outputRows.push({
+          email,
+          learningProfileCode,
+          course_code: code,
+          status: 'failure',
+          remark: err.message
+        });
+      }
     }
-  });
+
+  } catch (err) {
+    outputRows.push({
+      email,
+      learningProfileCode,
+      course_code: row.course_code,
+      status: 'failure',
+      remark: err.message
+    });
+  }
+
 }
 
 // Main execution
 (async () => {
+  // const startTime = new Date();
+  // console.log(`🚀 Course completion script started at: ${startTime.toLocaleString()}`);
+  
   try {
     const creatorTokenResp = await getKeycloakToken(CREATOR_USERNAME, CREATOR_PASSWORD);
     const creatorAccess = await refreshAccessToken(creatorTokenResp.refresh_token);
-    console.log('Creator Access Token acquired');
+    console.log('✅ Creator Access Token acquired');
 
     const allRows = [];
-
     fs.createReadStream('input.csv')
       .pipe(csv({ mapHeaders: ({ header }) => header.trim() }))
-      .on('data', (row) => {
-        allRows.push(row);
-      })
+      .on('data', (row) => allRows.push(row))
       .on('end', async () => {
-        for (const row of allRows) {
-          const email = row.email.trim();
-          const learningProfileCode = row.learning_profile_code.trim();
-          const codes = row.course_code.split(',').map(c => c.trim().replace(/"/g, ''));
-
-          console.log(`Processing: ${email}`);
-
-          try {
-            const userTokenResp = await getKeycloakToken(email, '');
-            const userAccess = await refreshAccessToken(userTokenResp.refresh_token);
-            const userId = await getUserId(email, userAccess.access_token);
-
-            for (const code of codes) {
-              try {
-                const { courseId, batchId } = await getCourseAndBatch(code, learningProfileCode, creatorAccess.access_token, userAccess.access_token);
-                const contentIds = await getContentIds(courseId, creatorAccess.access_token);
-                  
-                console.log(`Processing userId-${userId}, batchId-${batchId}, courseId-${courseId}`);
-                for (const contentId of contentIds) {
-                  await updateContentState(userId, contentId, batchId, courseId, userAccess.access_token);
-                }
-
-                outputRows.push({
-                  email,
-                  learningProfileCode,
-                  course_code: code,
-                  status: 'success',
-                  remark: ''
-                });
-              } catch (err) {
-                outputRows.push({
-                  email,
-                  learningProfileCode,
-                  course_code: code,
-                  status: 'failure',
-                  remark: err.message
-                });
-              }
-
-            }
-
-            // Delay to prevent hitting the API rate limit
-            await delay(200);
-
-          } catch (err) {
-            outputRows.push({
-              email,
-              learningProfileCode,
-              course_code: row.course_code,
-              status: 'failure',
-              remark: err.message
-            });
-          }
-
-        }
+        const limit = pLimit(10);
+        await Promise.all(allRows.map(row => limit(() => processRow(row, creatorAccess.access_token))));
 
         const fields = ['email', 'learningProfileCode', 'course_code', 'status', 'remark'];
-        const json2csvParser = new Parser({ fields });
-        const csvData = json2csvParser.parse(outputRows);
-
+        const csvData = new Parser({ fields }).parse(outputRows);
         fs.writeFileSync(OUTPUT_FILE, csvData);
         console.log(`✅ Output report saved to ${OUTPUT_FILE}`);
       });
 
   } catch (err) {
-    console.error('Initialization error:', err.message);
+    console.error('❌ Initialization error:', err.message);
   }
 })();
