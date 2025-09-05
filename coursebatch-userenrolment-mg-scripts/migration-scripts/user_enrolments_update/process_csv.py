@@ -186,7 +186,6 @@ def parse_csv(input_path: str) -> List[Dict[str, Any]]:
     return rows
 
 def write_csv(output_path: str, rows: List[Dict[str, Any]]):
-    import os
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     fieldnames = ["email", "userId", "userName", "learnerProfileCode", "courseCode", "courseId", "courseName", "batchName", "batchId", "completedOn"]
     with open(output_path, 'w', newline='', encoding='utf-8') as csvfile:
