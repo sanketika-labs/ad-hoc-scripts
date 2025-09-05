@@ -1,0 +1,27 @@
+{{- if .Values.deployments.userEnrolmentsUpdate.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-enrolments-update
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-enrolments-update
+  template:
+    metadata:
+      labels:
+        app: user-enrolments-update
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: user-enrolments-update
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["sleep", "infinity"]
+          volumeMounts:
+            {{- toYaml .Values.volumeMounts | nindent 14 }}
+      volumes:
+        {{- toYaml .Values.volumes | nindent 10 }}
+{{- end }}

@@ -1,0 +1,4 @@
+apiVersion: v2
+name: migration-scripts
+version: 0.1.0
+description: A Helm chart for running migration-scripts as a Kubernetes deployment 
