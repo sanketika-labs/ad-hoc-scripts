@@ -62,7 +62,7 @@ function confirm() {
 echo "Starting interactive job runner for migration-scripts Helm chart."
 
 for JOB in "${JOBS[@]}"; do
-  echo "\n---"
+  printf "\n---\n"
   echo "Deploying job: $JOB"
   # Build --set string to enable only this job
   SET_ARGS=""
