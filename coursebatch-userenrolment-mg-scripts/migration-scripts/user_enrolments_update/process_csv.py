@@ -66,13 +66,6 @@ def load_config(path: str) -> dict:
     with open(path, 'r') as f:
         return yaml.safe_load(f)
 
-def setup_logging():
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s %(levelname)s %(message)s',
-        handlers=[logging.StreamHandler(sys.stdout)]
-    )
-
 def null_string_check(s):
     return s if s is not None else ''
 
