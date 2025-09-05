@@ -4,10 +4,8 @@ import yaml
 import logging
 import os
 import sys
-import csv
+
 import argparse
-import logging
-import yaml
 import requests
 from datetime import datetime
 from typing import List, Dict, Any, Tuple, Set
