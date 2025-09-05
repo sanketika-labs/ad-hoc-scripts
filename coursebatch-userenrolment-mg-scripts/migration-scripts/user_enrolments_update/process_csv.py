@@ -11,7 +11,6 @@ from time import sleep
 
 import platform
 from datetime import datetime
-import logging
 from logging.handlers import RotatingFileHandler
 
 # Setup logging to file and console
