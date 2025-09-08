@@ -1,0 +1,25 @@
+{{- if .Values.jobs.userEnrolmentsUpdatePushKafka.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: user-enrolments-update-push-kafka
+  namespace: {{ .Release.Namespace }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: user-enrolments-update-job
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: user-enrolments-update-push-kafka
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/bash", "-c"]
+          args:
+            - python user_enrolments_update/post_update_ops.py push-kafka events_to_push.jsonl config.yaml
+          volumeMounts:
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
+      volumes:
+        {{- toYaml .Values.volumes | nindent 8 }}
+{{- end }}

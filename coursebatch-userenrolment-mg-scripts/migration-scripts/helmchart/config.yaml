@@ -1,0 +1,29 @@
+host: ""
+channel_id: ""
+apikey: ""
+access_token: ""
+creator_access_token: ""
+batch_size: 50
+dry_run: true
+kafka_host: "kafka.sunbird.svc.cluster.local:9092"
+kafka_topic: "fmps.generate.certificate.request"
+kafka_batch_size: 50
+es_host: "http://elasticsearch.sunbird.svc.cluster.local:9200"
+cassandra_batch_sleep: 0.1
+cassandra:
+  connection_url: "cassandra.sunbird.svc.cluster.local:9042"
+  keyspace: "sunbird_courses"
+  user_enrolments_table: "user_enrolments"
+  course_batch_table: "course_batch"
+remove_template_identifier: "do_21433930296623923211"
+cert_templates: |
+  {'do_21436629936082124811': {
+    'criteria': '{"user":{"rootOrgId":"0143146729170944000"},"enrollment":{"status":2}}',
+    'data': '{"title":"1 logo 1 signature"}',
+    'identifier': 'do_21436629936082124811',
+    'issuer': '{"name":"FMPS","url":"{{host_url}}"}',
+    'name': '1 logo 1 signature',
+    'previewUrl': 'https://downloadableartifacts.blob.core.windows.net/release600/Certificate-FMPS-1.svg',
+    'signatoryList': '[{"image":"{{host_url}}assets/images/sunbird_logo.png","name":"FMPS","id":"fmps","designation":"FMPS"}]',
+    'url': 'https://downloadableartifacts.blob.core.windows.net/release600/Certificate-FMPS-1.svg'
+  }} 

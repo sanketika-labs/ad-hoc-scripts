@@ -1,0 +1,57 @@
+{
+  "actor": {
+    "id": "Certificate Generator",
+    "type": "System"
+  },
+  "eid": "BE_JOB_REQUEST",
+  "edata": {
+    "name": "1 logo 1 signature",
+    "tag": "0143641730464153606",
+    "criteria": {
+      "narrative": "1 logo 1 signature"
+    },
+    "issuedDate": "2025-07-28",
+    "data": [
+      {
+        "recipientName": "OULAHRI FATIMA",
+        "recipientId": "6a4c5e86-0396-428f-91ff-ee4d5263310a"
+      }
+    ],
+    "issuer": {
+      "name": "FMPS",
+      "url": "{{host_url}}"
+    },
+    "orgId": "0143146729170944000",
+    "basePath": "{{host_url}}certs",
+    "signatoryList": [
+      {
+        "image": "{{host_url}}assets/images/sunbird_logo.png",
+        "name": "FMPS",
+        "id": "fmps",
+        "designation": "FMPS"
+      }
+    ],
+    "svgTemplate": "https://downloadableartifacts.blob.core.windows.net/release600/Certificate-FMPS-1.svg",
+    "templateId": "do_21436629936082124811",
+    "related": {
+      "batchId": "0143641730464153606",
+      "courseId": "do_2143430391853711361636",
+      "type": "1 logo 1 signature"
+    },
+    "oldId": "",
+    "userId": "6a4c5e86-0396-428f-91ff-ee4d5263310a",
+    "courseName": "تقدير الذات عند الطفل في مرحلة التعليم الاولي"
+  },
+  "ets": 1753676071009,
+  "context": {
+    "pdata": {
+      "ver": "1.0",
+      "id": "org.sunbird.learning.platform"
+    }
+  },
+  "mid": "LMS.1206e657-62d3-45f9-aa07-2134e4135380",
+  "object": {
+    "id": "6a4c5e86-0396-428f-91ff-ee4d5263310a",
+    "type": "GenerateCertificate"
+  }
+}

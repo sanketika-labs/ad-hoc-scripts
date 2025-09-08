@@ -1,0 +1,42 @@
+image:
+  repository: aimansharief/migration-scripts
+  tag: prod-08
+  pullPolicy: IfNotPresent
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: migration-scripts-config
+  - name: data-volume
+    persistentVolumeClaim:
+      claimName: migration-scripts-pvc
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /app/config.yaml
+    subPath: config.yaml
+  - name: data-volume
+    mountPath: /app/data
+
+deployments:
+  userEnrolmentsUpdate:
+    enabled: true  # Set to true to run as Deployment instead of Job
+
+jobs:
+  courseBatchUpdateDryRun:
+    enabled: false
+  courseBatchUpdate:
+    enabled: false
+  userEnrolmentsUpdateGenerate:
+    enabled: false
+  userEnrolmentsUpdateUpdateDryRun:
+    enabled: false
+  userEnrolmentsUpdateUpdate:
+    enabled: false
+  userEnrolmentsUpdateDeleteEs:
+    enabled: false
+  userEnrolmentsUpdateGenerateEvents:
+    enabled: false
+  userEnrolmentsUpdatePushKafka:
+    enabled: false
+
