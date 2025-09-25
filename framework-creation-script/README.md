@@ -5,7 +5,19 @@ This script processes a CSV file (`fw-c-t.csv`) to create frameworks, master cat
 ## Prerequisites
 
 - Python 3.x
-- `requests` library (install with `pip install requests`)
+- Create and activate a virtual environment:
+
+  ```bash
+  python3 -m venv .venv
+  source .venv/bin/activate
+  ```
+
+- Install dependency:
+
+  ```bash
+  pip install requests
+  ```
+
 - CSV file `fw-c-t.csv` in the same directory
 - `config.json` with API credentials
 
