@@ -1,0 +1,25 @@
+{{- if .Values.jobs.userEnrolmentsUpdateUpdate.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: user-enrolments-update-update
+  namespace: {{ .Release.Namespace }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: user-enrolments-update-job
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: user-enrolments-update-update
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/bash", "-c"]
+          args:
+            - python user_enrolments_update/process_csv.py update --config config.yaml --output user_enrolments_update/user_enrolments_output.csv --dry_run false
+          volumeMounts:
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
+      volumes:
+        {{- toYaml .Values.volumes | nindent 8 }}
+{{- end }}

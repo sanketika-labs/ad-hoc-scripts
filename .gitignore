@@ -3,3 +3,56 @@ reports/
 node_modules/
 .vscode
 .env
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+*.venv
+venv/
+env/
+ENV/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# CSV/Excel temp files
+~$*.xlsx
+~$*.csv
+
+# Docker
+*.pid
+
+# Ignore output reports
+output_report.csv
+
+# Ignore test coverage
+coverage/
+
+# Ignore Helm chart temp files
+*.tgz
+
+# Ignore Protean temp files
+Protean/**/*.zip
+Protean/**/*.csv
+Protean/**/*.xlsx
+
+# Ignore migration script outputs
+coursebatch-userenrolment-mg-scripts/**/*.csv
+coursebatch-userenrolment-mg-scripts/**/*.xlsx
+
+# Ignore migration script outputs for coursebatch folder
+coursebatch-userenrolment-mg-scripts/**/*.csv
+coursebatch-userenrolment-mg-scripts/**/*.xlsx

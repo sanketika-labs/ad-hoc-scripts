@@ -1,0 +1,25 @@
+{{- if .Values.jobs.courseBatchUpdate.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: course-batch-update
+  namespace: {{ .Release.Namespace }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: course-batch-update-job
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: course-batch-update
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/bash", "-c"]
+          args:
+            - python course_batch_update/process_course_batches.py --config config.yaml --input course_batch_update/course_batch_input.csv --dry-run false
+          volumeMounts:
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
+      volumes:
+        {{- toYaml .Values.volumes | nindent 8 }}
+{{- end }}
