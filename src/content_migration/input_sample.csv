@@ -1,0 +1,5 @@
+Code,Observable Element Code,Type
+FMPS_C001,"E0001, E003",Course
+FMPS_C002,"E0001",Course
+FMPS_M001,"E0002, E004",Module
+FMPS_R001,"E0005",Resource
